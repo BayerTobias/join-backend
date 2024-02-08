@@ -2,6 +2,7 @@ from django.shortcuts import render
 from rest_framework.authtoken.views import ObtainAuthToken, APIView
 from rest_framework.authtoken.models import Token
 from rest_framework.response import Response
+from rest_framework import status
 from .models import Task
 from join_backend.serializers import TaskSerializer
 
@@ -22,3 +23,12 @@ class TaskView(APIView):
         tasks = Task.objects.all()
         serializer = TaskSerializer(tasks, many=True)
         return Response(serializer.data)
+
+    def post(self, request):
+        serializer = TaskSerializer(data=request.data)
+
+        if serializer.is_valid():
+            serializer.save(author=request.user, assigned_users=[request.user])
+            return Response(serializer.data, status=status.HTTP_201_CREATED)
+
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
