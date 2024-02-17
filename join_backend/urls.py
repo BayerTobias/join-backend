@@ -17,10 +17,12 @@ Including another URLconf
 
 from django.contrib import admin
 from django.urls import path
-from join.views import TaskView, LoginView
+from join.views import TaskView, LoginView, CreateUserView, DeleteUserView
 
 urlpatterns = [
     path("admin/", admin.site.urls),
     path("login/", LoginView.as_view()),
     path("tasks/", TaskView.as_view()),
+    path("create_user/", CreateUserView.as_view()),
+    path("delete_user/", DeleteUserView.as_view()),
 ]

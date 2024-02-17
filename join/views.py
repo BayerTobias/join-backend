@@ -1,10 +1,15 @@
 from django.shortcuts import render
+from .models import Task
+from join_backend.serializers import TaskSerializer
+from django.contrib.auth.models import User
+from rest_framework.serializers import ValidationError
+
+from rest_framework import status
 from rest_framework.authtoken.views import ObtainAuthToken, APIView
 from rest_framework.authtoken.models import Token
 from rest_framework.response import Response
-from rest_framework import status
-from .models import Task
-from join_backend.serializers import TaskSerializer
+from rest_framework.permissions import IsAuthenticated
+from rest_framework.authentication import TokenAuthentication
 
 
 class LoginView(ObtainAuthToken):
@@ -19,6 +24,9 @@ class LoginView(ObtainAuthToken):
 
 
 class TaskView(APIView):
+    authentication_classes = [TokenAuthentication]
+    permission_classes = [IsAuthenticated]
+
     def get(self, request):
         tasks = Task.objects.all()
         serializer = TaskSerializer(tasks, many=True)
@@ -32,3 +40,39 @@ class TaskView(APIView):
             return Response(serializer.data, status=status.HTTP_201_CREATED)
 
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+
+class CreateUserView(APIView):
+
+    def post(self, request):
+        username = request.data.get("username")
+        email = request.data.get("email")
+        password = request.data.get("password")
+
+        if User.objects.filter(username=username).exists():
+            return Response(
+                {"message": "This Username already exists"},
+                status=status.HTTP_409_CONFLICT,
+            )
+
+        user = User.objects.create_user(
+            username=username, email=email, password=password
+        )
+
+        return Response(
+            {"message": "User created successfully"}, status=status.HTTP_201_CREATED
+        )
+
+
+class DeleteUserView(APIView):
+    authentication_classes = [TokenAuthentication]
+    permission_classes = [IsAuthenticated]
+
+    def delete(self, request):
+
+        user = request.user
+        user.delete()
+
+        return Response(
+            {"message": "User deleted successfully"}, status=status.HTTP_204_NO_CONTENT
+        )
