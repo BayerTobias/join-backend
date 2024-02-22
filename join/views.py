@@ -51,7 +51,13 @@ class CreateUserView(APIView):
 
         if User.objects.filter(username=username).exists():
             return Response(
-                {"message": "This Username already exists"},
+                {"message": "This username already exists"},
+                status=status.HTTP_409_CONFLICT,
+            )
+
+        if User.objects.filter(email=email).exists():
+            return Response(
+                {"message": "This email already exists"},
                 status=status.HTTP_409_CONFLICT,
             )
 
