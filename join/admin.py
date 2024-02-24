@@ -1,5 +1,5 @@
 from django.contrib import admin
-from .models import Task
+from .models import Task, Category
 
 # Register your models here.
 
@@ -10,4 +10,11 @@ class Task_Admin(admin.ModelAdmin):
     list_display_links = ("id", "title")
 
 
+class Category_Admin(admin.ModelAdmin):
+    list_display = ("id", "name", "color")
+    list_filter = ("id",)
+    list_display_links = ("id", "name", "color")
+
+
 admin.site.register(Task, Task_Admin)
+admin.site.register(Category, Category_Admin)
