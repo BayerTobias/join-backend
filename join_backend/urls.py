@@ -17,12 +17,19 @@ Including another URLconf
 
 from django.contrib import admin
 from django.urls import path, include
-from join.views import TaskView, LoginView, CreateUserView, DeleteUserView
+from join.views import (
+    TaskView,
+    LoginView,
+    CreateUserView,
+    DeleteUserView,
+    CategorysView,
+)
 
 urlpatterns = [
     path("admin/", admin.site.urls),
     path("login/", LoginView.as_view()),
     path("tasks/", TaskView.as_view()),
+    path("categorys/", CategorysView.as_view()),
     path("create_user/", CreateUserView.as_view()),
     path("delete_user/", DeleteUserView.as_view()),
     path(

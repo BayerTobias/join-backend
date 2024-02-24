@@ -1,6 +1,6 @@
 from django.shortcuts import render
-from .models import Task
-from join_backend.serializers import TaskSerializer
+from .models import Task, Category
+from join_backend.serializers import TaskSerializer, CategorySerializer
 from django.contrib.auth.models import User
 from rest_framework.serializers import ValidationError
 
@@ -40,6 +40,16 @@ class TaskView(APIView):
             return Response(serializer.data, status=status.HTTP_201_CREATED)
 
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+
+class CategorysView(APIView):
+    authentication_classes = [TokenAuthentication]
+    permission_classes = [IsAuthenticated]
+
+    def get(self, request):
+        categorys = Category.objects.all()
+        serializer = CategorySerializer(categorys, many=True)
+        return Response(serializer.data)
 
 
 class CreateUserView(APIView):
