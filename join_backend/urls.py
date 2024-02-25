@@ -23,6 +23,7 @@ from join.views import (
     CreateUserView,
     DeleteUserView,
     CategorysView,
+    UserListView,
 )
 
 urlpatterns = [
@@ -30,6 +31,7 @@ urlpatterns = [
     path("login/", LoginView.as_view()),
     path("tasks/", TaskView.as_view()),
     path("categorys/", CategorysView.as_view()),
+    path("users/", UserListView.as_view()),
     path("create_user/", CreateUserView.as_view()),
     path("delete_user/", DeleteUserView.as_view()),
     path(

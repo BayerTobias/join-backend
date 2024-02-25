@@ -1,6 +1,10 @@
 from django.shortcuts import render
 from .models import Task, Category
-from join_backend.serializers import TaskSerializer, CategorySerializer
+from join_backend.serializers import (
+    TaskSerializer,
+    CategorySerializer,
+    UserListSerializer,
+)
 from django.contrib.auth.models import User
 from rest_framework.serializers import ValidationError
 
@@ -36,7 +40,9 @@ class TaskView(APIView):
         serializer = TaskSerializer(data=request.data)
 
         if serializer.is_valid():
-            serializer.save(author=request.user, assigned_users=[request.user])
+            serializer.save(
+                author=request.user, assigned_users=[request.user]
+            )  # add category
             return Response(serializer.data, status=status.HTTP_201_CREATED)
 
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
@@ -92,3 +98,16 @@ class DeleteUserView(APIView):
         return Response(
             {"message": "User deleted successfully"}, status=status.HTTP_204_NO_CONTENT
         )
+
+
+class UserListView(APIView):
+    authentication_classes = [TokenAuthentication]
+    permission_classes = [IsAuthenticated]
+
+    def get(self, request):
+
+        users = User.objects.all()
+
+        serializer = UserListSerializer(users, many=True)
+
+        return Response(serializer.data)
