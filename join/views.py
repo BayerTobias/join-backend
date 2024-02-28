@@ -57,6 +57,15 @@ class CategorysView(APIView):
         serializer = CategorySerializer(categorys, many=True)
         return Response(serializer.data)
 
+    def post(self, request):
+        serializer = CategorySerializer(data=request.data)
+
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.data, status=status.HTTP_201_CREATED)
+
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
 
 class CreateUserView(APIView):
 
