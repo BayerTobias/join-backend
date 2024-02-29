@@ -1,4 +1,5 @@
-from django.shortcuts import render
+from django.shortcuts import render, get_object_or_404
+
 from .models import Task, Category
 from join_backend.serializers import (
     TaskSerializer,
@@ -40,9 +41,17 @@ class TaskView(APIView):
         serializer = TaskSerializer(data=request.data)
 
         if serializer.is_valid():
+            category_id = request.data.get("category")
+            category = get_object_or_404(Category, pk=category_id)
+
+            assigned_user_ids = request.data.get("assigned_users", [])
+            assigned_users = User.objects.filter(pk__in=assigned_user_ids)
+
             serializer.save(
-                author=request.user, assigned_users=[request.user]
-            )  # add category
+                author=request.user,
+                assigned_users=assigned_users,
+                category=category,
+            )
             return Response(serializer.data, status=status.HTTP_201_CREATED)
 
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
