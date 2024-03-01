@@ -4,7 +4,6 @@ from django.contrib.auth.models import User
 
 
 class TaskSerializer(serializers.ModelSerializer):
-    # due_date = serializers.DateField(source="dueDate")
 
     class Meta:
         model = Task
