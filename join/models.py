@@ -26,4 +26,6 @@ class Task(models.Model):
     priority = models.CharField(max_length=20, default="low")
     assigned_users = models.ManyToManyField(User, related_name="assigned_tasks")
     category = models.ForeignKey(Category, on_delete=models.DO_NOTHING, default=None)
-    subtasks = models.ManyToManyField(Subtask, related_name="assigned_tasks")
+
+    subtasks = models.JSONField(default=None)
+    # subtasks = models.ManyToManyField(Subtask, related_name="assigned_tasks")

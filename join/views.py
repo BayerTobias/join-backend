@@ -16,6 +16,8 @@ from rest_framework.response import Response
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.authentication import TokenAuthentication
 
+from .functions import testFunction
+
 
 class LoginView(ObtainAuthToken):
     def post(self, request, *args, **kwargs):
@@ -47,11 +49,12 @@ class TaskView(APIView):
             assigned_user_ids = request.data.get("assigned_users", [])
             assigned_users = User.objects.filter(pk__in=assigned_user_ids)
 
-            serializer.save(
+            task = serializer.save(
                 author=request.user,
                 assigned_users=assigned_users,
                 category=category,
             )
+
             return Response(serializer.data, status=status.HTTP_201_CREATED)
 
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
