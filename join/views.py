@@ -83,6 +83,8 @@ class CreateUserView(APIView):
 
     def post(self, request):
         username = request.data.get("username")
+        first_name = request.data.get("firstname")
+        last_name = request.data.get("lastname")
         email = request.data.get("email")
         password = request.data.get("password")
         initials = request.data.get("initials")
@@ -102,6 +104,8 @@ class CreateUserView(APIView):
 
         user = CustomUser.objects.create_user(
             username=username,
+            first_name=first_name,
+            last_name=last_name,
             email=email,
             password=password,
             initials=initials,
