@@ -1,5 +1,5 @@
 from django.contrib import admin
-from .models import Task, Category, Subtask
+from .models import Task, Category, Subtask, CustomUser
 
 # Register your models here.
 
@@ -19,3 +19,4 @@ class Category_Admin(admin.ModelAdmin):
 admin.site.register(Task, Task_Admin)
 admin.site.register(Category, Category_Admin)
 admin.site.register(Subtask)
+admin.site.register(CustomUser)

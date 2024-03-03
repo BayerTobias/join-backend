@@ -1,12 +1,12 @@
 from django.shortcuts import render, get_object_or_404
 
-from .models import Task, Category
+from .models import Task, Category, CustomUser
 from join_backend.serializers import (
     TaskSerializer,
     CategorySerializer,
     UserListSerializer,
 )
-from django.contrib.auth.models import User
+
 from rest_framework.serializers import ValidationError
 
 from rest_framework import status
@@ -47,7 +47,7 @@ class TaskView(APIView):
             category = get_object_or_404(Category, pk=category_id)
 
             assigned_user_ids = request.data.get("assigned_users", [])
-            assigned_users = User.objects.filter(pk__in=assigned_user_ids)
+            assigned_users = CustomUser.objects.filter(pk__in=assigned_user_ids)
 
             task = serializer.save(
                 author=request.user,
@@ -86,19 +86,19 @@ class CreateUserView(APIView):
         email = request.data.get("email")
         password = request.data.get("password")
 
-        if User.objects.filter(username=username).exists():
+        if CustomUser.objects.filter(username=username).exists():
             return Response(
                 {"message": "This username already exists"},
                 status=status.HTTP_409_CONFLICT,
             )
 
-        if User.objects.filter(email=email).exists():
+        if CustomUser.objects.filter(email=email).exists():
             return Response(
                 {"message": "This email already exists"},
                 status=status.HTTP_409_CONFLICT,
             )
 
-        user = User.objects.create_user(
+        user = CustomUser.objects.create_user(
             username=username, email=email, password=password
         )
 
@@ -127,7 +127,7 @@ class UserListView(APIView):
 
     def get(self, request):
 
-        users = User.objects.all()
+        users = CustomUser.objects.all()
 
         serializer = UserListSerializer(users, many=True)
 
