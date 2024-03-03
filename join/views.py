@@ -85,6 +85,8 @@ class CreateUserView(APIView):
         username = request.data.get("username")
         email = request.data.get("email")
         password = request.data.get("password")
+        initials = request.data.get("initials")
+        color = request.data.get("color")
 
         if CustomUser.objects.filter(username=username).exists():
             return Response(
@@ -99,7 +101,11 @@ class CreateUserView(APIView):
             )
 
         user = CustomUser.objects.create_user(
-            username=username, email=email, password=password
+            username=username,
+            email=email,
+            password=password,
+            initials=initials,
+            color=color,
         )
 
         return Response(
