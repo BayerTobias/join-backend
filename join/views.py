@@ -60,6 +60,25 @@ class TaskView(APIView):
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 
+class SingleTaskView(APIView):
+    authentication_classes = [TokenAuthentication]
+    permission_classes = [IsAuthenticated]
+
+    def patch(self, request, task_id):
+        task = get_object_or_404(Task, pk=task_id)
+        serializer = TaskSerializer(instance=task, data=request.data, partial=True)
+
+        if serializer.is_valid():
+
+            serializer.save(
+                author=request.user,
+            )
+
+            return Response(serializer.data, status=status.HTTP_200_OK)
+
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+
 class CategorysView(APIView):
     authentication_classes = [TokenAuthentication]
     permission_classes = [IsAuthenticated]
