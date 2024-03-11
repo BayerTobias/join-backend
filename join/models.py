@@ -11,6 +11,15 @@ class CustomUser(AbstractUser):
     color = models.CharField(max_length=10)
 
 
+class Contact(models.Model):
+    user = models.ForeignKey(
+        CustomUser, on_delete=models.CASCADE, related_name="contacts"
+    )
+    name = models.CharField(max_length=20)
+    email = models.CharField(max_length=50)
+    phone = models.CharField(max_length=20)
+
+
 class Category(models.Model):
     name = models.CharField(max_length=100)
     color = models.CharField(max_length=100)

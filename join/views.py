@@ -5,6 +5,7 @@ from join_backend.serializers import (
     TaskSerializer,
     CategorySerializer,
     UserListSerializer,
+    ContactSerializer,
 )
 
 from rest_framework.serializers import ValidationError
@@ -27,7 +28,15 @@ class LoginView(ObtainAuthToken):
         serializer.is_valid(raise_exception=True)
         user = serializer.validated_data["user"]
         token, created = Token.objects.get_or_create(user=user)
-        return Response({"token": token.key, "user_id": user.pk, "email": user.email})
+        contacts = ContactSerializer(user.contacts.all(), many=True).data
+        return Response(
+            {
+                "token": token.key,
+                "user_id": user.pk,
+                "email": user.email,
+                "contacts": contacts,
+            }
+        )
 
 
 class TaskView(APIView):
@@ -161,3 +170,16 @@ class UserListView(APIView):
         serializer = UserListSerializer(users, many=True)
 
         return Response(serializer.data)
+
+
+class ContactView(APIView):
+    authentication_classes = [TokenAuthentication]
+    permission_classes = [IsAuthenticated]
+
+    def post(self, request):
+        serializer = ContactSerializer(data=request.data)
+        if serializer.is_valid():
+            serializer.save(user=request.user)
+            return Response(serializer.data, status=status.HTTP_201_CREATED)
+
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
