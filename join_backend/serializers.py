@@ -24,6 +24,21 @@ class UserListSerializer(serializers.ModelSerializer):
         fields = ["id", "username", "initials", "color"]
 
 
+class UserSerializer(serializers.ModelSerializer):
+
+    class Meta:
+        model = CustomUser
+        fields = [
+            "id",
+            "username",
+            "initials",
+            "color",
+            "first_name",
+            "last_name",
+            "email",
+        ]
+
+
 class ContactSerializer(serializers.ModelSerializer):
 
     class Meta:

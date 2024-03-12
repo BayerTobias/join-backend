@@ -18,6 +18,8 @@ class Contact(models.Model):
     name = models.CharField(max_length=20)
     email = models.CharField(max_length=50)
     phone = models.CharField(max_length=20)
+    initials = models.CharField(max_length=5)
+    color = models.CharField(max_length=100)
 
 
 class Category(models.Model):
