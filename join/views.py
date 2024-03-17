@@ -88,6 +88,14 @@ class SingleTaskView(APIView):
 
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
+    def delete(self, request, task_id):
+        task = get_object_or_404(Task, pk=task_id)
+        task.delete()
+
+        return Response(
+            {"message": "User created successfully"}, status=status.HTTP_201_CREATED
+        )
+
 
 class CategorysView(APIView):
     authentication_classes = [TokenAuthentication]
