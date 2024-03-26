@@ -1,6 +1,6 @@
 from django.shortcuts import render, get_object_or_404
 
-from .models import Task, Category, CustomUser
+from .models import Task, Category, CustomUser, Contact
 from join_backend.serializers import (
     TaskSerializer,
     CategorySerializer,
@@ -192,3 +192,8 @@ class ContactView(APIView):
             return Response(serializer.data, status=status.HTTP_201_CREATED)
 
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+    def delete(self, request, contact_id):
+        contact = get_object_or_404(Contact, pk=contact_id)
+        contact.delete()
+        return Response(status=status.HTTP_204_NO_CONTENT)
