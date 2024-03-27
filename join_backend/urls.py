@@ -38,7 +38,7 @@ urlpatterns = [
     path("create_user/", CreateUserView.as_view()),
     path("delete_user/", DeleteUserView.as_view()),
     path("contacts/", ContactView.as_view()),
-    path("contacts/<int:contact_id>", ContactView.as_view()),
+    path("contacts/<int:contact_id>/", ContactView.as_view()),
     path(
         "password_reset/",
         include("django_rest_passwordreset.urls", namespace="password_reset"),
