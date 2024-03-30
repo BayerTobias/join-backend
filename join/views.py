@@ -197,3 +197,14 @@ class ContactView(APIView):
         contact = get_object_or_404(Contact, pk=contact_id)
         contact.delete()
         return Response(status=status.HTTP_204_NO_CONTENT)
+
+    def patch(self, request, contact_id):
+        contact = get_object_or_404(Contact, pk=contact_id)
+        serializer = ContactSerializer(instance=contact, data=request.data)
+
+        if serializer.is_valid():
+            serializer.save()
+
+            return Response(status=status.HTTP_200_OK)
+
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
