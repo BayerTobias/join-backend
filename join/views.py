@@ -40,6 +40,31 @@ class LoginView(ObtainAuthToken):
         )
 
 
+class LogoutView(APIView):
+    authentication_classes = [TokenAuthentication]
+    permission_classes = [IsAuthenticated]
+
+    def post(self, request):
+        try:
+            token = request.auth
+            Token.objects.filter(key=token).delete()
+
+            return Response({"message": "logout successful"}, status=status.HTTP_200_OK)
+
+        except Exception as e:
+
+            return Response({"error": str(e)}, status=status.HTTP_400_BAD_REQUEST)
+
+
+class checkAuth(APIView):
+    authentication_classes = [TokenAuthentication]
+    permission_classes = [IsAuthenticated]
+
+    def get(self, request):
+
+        return Response({"message": "Authenticated"}, status=status.HTTP_200_OK)
+
+
 class TaskView(APIView):
     authentication_classes = [TokenAuthentication]
     permission_classes = [IsAuthenticated]

@@ -21,16 +21,20 @@ from join.views import (
     TaskView,
     SingleTaskView,
     LoginView,
+    LogoutView,
     CreateUserView,
     DeleteUserView,
     CategorysView,
     UserListView,
     ContactView,
+    checkAuth,
 )
 
 urlpatterns = [
     path("admin/", admin.site.urls),
     path("login/", LoginView.as_view()),
+    path("logout/", LogoutView.as_view()),
+    path("check_auth/", checkAuth.as_view()),
     path("tasks/", TaskView.as_view()),
     path("tasks/<int:task_id>/", SingleTaskView.as_view()),
     path("categorys/", CategorysView.as_view()),
