@@ -29,6 +29,7 @@ from join.views import (
     ContactView,
     checkAuth,
 )
+from join.signals import receiver
 
 urlpatterns = [
     path("admin/", admin.site.urls),
@@ -46,5 +47,9 @@ urlpatterns = [
     path(
         "password_reset/",
         include("django_rest_passwordreset.urls", namespace="password_reset"),
+    ),
+    path(
+        "password_reset/confirm/",
+        include("django_rest_passwordreset.urls", namespace="password_reset_confirm"),
     ),
 ]
