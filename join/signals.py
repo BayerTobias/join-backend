@@ -22,14 +22,15 @@ def password_reset_token_created(
     """
     # send an e-mail to the user
 
+    # set URL to Join URL
     context = {
-        "current_user": reset_password_token.user,
+        "current_user": "Tobias Bayer",
         "username": reset_password_token.user.username,
         "email": reset_password_token.user.email,
-        "reset_password_url": "{}?token={}".format(
-            instance.request.build_absolute_uri(
-                reverse("password_reset:reset-password-confirm")
-            ),
+        "reset_password_url": "http://localhost:4200/reset-password?token={}".format(
+            # instance.request.build_absolute_uri(
+            #     reverse("password_reset:reset-password-confirm")
+            # ),
             reset_password_token.key,
         ),
     }
@@ -40,11 +41,11 @@ def password_reset_token_created(
 
     msg = EmailMultiAlternatives(
         # title:
-        "Password Reset for {title}".format(title="Some website title"),
+        "Password Reset for {title}".format(title="Join"),
         # message:
         email_plaintext_message,
         # from:
-        "noreply@somehost.local",
+        "noreply@tobias-bayer.dev",
         # to:
         [reset_password_token.user.email],
     )
