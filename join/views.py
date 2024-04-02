@@ -36,7 +36,8 @@ class LoginView(ObtainAuthToken):
                 "token": token.key,
                 "user": user_data,
                 "contacts": contacts,
-            }
+            },
+            status=status.HTTP_200_OK,
         )
 
 
