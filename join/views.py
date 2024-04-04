@@ -22,6 +22,16 @@ from .functions import testFunction
 
 
 class LoginView(ObtainAuthToken):
+    """
+    Handles POST requests for user login.
+
+    Args:
+        request: HTTP request object.
+
+    Returns:
+        Response: JSON response containing authentication token, user data, and contact information.
+    """
+
     def post(self, request, *args, **kwargs):
         serializer = self.serializer_class(data=request.data)
         serializer.is_valid(raise_exception=True)
@@ -45,6 +55,13 @@ class LogoutView(APIView):
     authentication_classes = [TokenAuthentication]
     permission_classes = [IsAuthenticated]
 
+    """
+    Handles user logout by deleting the authentication token.
+
+    Returns:
+        Response: JSON response indicating success or failure of the logout operation.
+    """
+
     def post(self, request):
         try:
             token = request.auth
@@ -61,6 +78,15 @@ class checkAuth(APIView):
     authentication_classes = [TokenAuthentication]
     permission_classes = [IsAuthenticated]
 
+    """
+    GET method for checking user authentication.
+
+    This method checks if the user is authenticated using TokenAuthentication.
+
+    Returns:
+    - Response: A JSON response indicating the authentication status.
+    """
+
     def get(self, request):
 
         return Response({"message": "Authenticated"}, status=status.HTTP_200_OK)
@@ -70,10 +96,25 @@ class TaskView(APIView):
     authentication_classes = [TokenAuthentication]
     permission_classes = [IsAuthenticated]
 
+    """
+    Get a list of all tasks.
+
+    Returns:
+        Response: JSON response containing serialized task data.
+    """
+
     def get(self, request):
         tasks = Task.objects.all()
         serializer = TaskSerializer(tasks, many=True)
         return Response(serializer.data)
+
+    """
+    Create a new task.
+
+    Returns:
+    Response: JSON response containing the serialized task data if successful,
+              otherwise error messages.
+    """
 
     def post(self, request):
         serializer = TaskSerializer(data=request.data)
@@ -100,6 +141,18 @@ class SingleTaskView(APIView):
     authentication_classes = [TokenAuthentication]
     permission_classes = [IsAuthenticated]
 
+    """
+    Update a single task.
+
+    Args:
+        request: HTTP request object.
+        task_id: ID of the task to be updated.
+    Returns:
+
+        Response: JSON response containing updated task data if successful,
+                  otherwise error messages.
+    """
+
     def patch(self, request, task_id):
         task = get_object_or_404(Task, pk=task_id)
         serializer = TaskSerializer(instance=task, data=request.data, partial=True)
@@ -114,12 +167,23 @@ class SingleTaskView(APIView):
 
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
+    """
+    Delete a single task.
+
+    Args:
+        request: HTTP request object.
+        task_id: ID of the task to be deleted.
+
+    Returns:
+        Response: JSON response indicating success or failure of the operation.
+    """
+
     def delete(self, request, task_id):
         task = get_object_or_404(Task, pk=task_id)
         task.delete()
 
         return Response(
-            {"message": "User created successfully"}, status=status.HTTP_201_CREATED
+            {"message": "Task deleted successfully"}, status=status.HTTP_204_NO_CONTENT
         )
 
 
@@ -127,10 +191,30 @@ class CategorysView(APIView):
     authentication_classes = [TokenAuthentication]
     permission_classes = [IsAuthenticated]
 
+    """
+    Retrieve all categories.
+
+    Args:
+        request: HTTP request object.
+
+    Returns:
+        Response: JSON response containing categories data.
+    """
+
     def get(self, request):
         categorys = Category.objects.all()
         serializer = CategorySerializer(categorys, many=True)
         return Response(serializer.data)
+
+    """
+    Create a new category.
+
+    Args:
+        request: HTTP request object.
+
+    Returns:
+        Response: JSON response containing newly created category data or error messages.
+    """
 
     def post(self, request):
         serializer = CategorySerializer(data=request.data)
@@ -143,6 +227,15 @@ class CategorysView(APIView):
 
 
 class CreateUserView(APIView):
+    """
+    Create a new user.
+
+    Args:
+        request: HTTP request object.
+
+    Returns:
+        Response: JSON response containing success/failure message.
+    """
 
     def post(self, request):
         username = request.data.get("username")
@@ -184,6 +277,16 @@ class DeleteUserView(APIView):
     authentication_classes = [TokenAuthentication]
     permission_classes = [IsAuthenticated]
 
+    """
+    Delete the authenticated user.
+
+    Args:
+        request: HTTP request object.
+
+    Returns:
+        Response: JSON response indicating success or failure of the delete operation.
+    """
+
     def delete(self, request):
 
         user = request.user
@@ -198,6 +301,16 @@ class UserListView(APIView):
     authentication_classes = [TokenAuthentication]
     permission_classes = [IsAuthenticated]
 
+    """
+    Retrieve a list of all users.
+
+    Args:
+        request: HTTP request object.
+        
+    Returns:
+        Response: JSON response containing a list of users.
+    """
+
     def get(self, request):
 
         users = CustomUser.objects.all()
@@ -211,6 +324,16 @@ class ContactView(APIView):
     authentication_classes = [TokenAuthentication]
     permission_classes = [IsAuthenticated]
 
+    """
+    Handles POST requests to create a new contact.
+
+    Args:
+        request: HTTP request object.
+        
+    Returns:
+        Response: JSON response containing the created contact data.
+    """
+
     def post(self, request):
         serializer = ContactSerializer(data=request.data)
         if serializer.is_valid():
@@ -219,10 +342,35 @@ class ContactView(APIView):
 
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
+    """
+    Handles DELETE requests to delete a contact.
+
+    Args:
+        request: HTTP request object.
+        contact_id (int): ID of the contact to be deleted.
+
+    Returns:
+        Response: JSON response indicating the success of the operation.
+    """
+
     def delete(self, request, contact_id):
         contact = get_object_or_404(Contact, pk=contact_id)
         contact.delete()
-        return Response(status=status.HTTP_204_NO_CONTENT)
+        return Response(
+            {"message": "Contact deleted successfully"},
+            status=status.HTTP_204_NO_CONTENT,
+        )
+
+    """
+    Handles PATCH requests to update a contact.
+
+    Args:
+        request: HTTP request object.
+        contact_id (int): ID of the contact to be updated.
+
+    Returns:
+        Response: JSON response containing the updated contact data.
+    """
 
     def patch(self, request, contact_id):
         contact = get_object_or_404(Contact, pk=contact_id)
@@ -231,6 +379,6 @@ class ContactView(APIView):
         if serializer.is_valid():
             serializer.save()
 
-            return Response(status=status.HTTP_200_OK)
+            return Response(serializer.data, status=status.HTTP_200_OK)
 
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)

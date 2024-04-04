@@ -11,6 +11,13 @@ class TestSetup(APITestCase):
         self.login_url = reverse("login")
         self.logout_url = reverse("logout")
         self.tasks_url = reverse("tasks")
+        self.single_tasks_url = reverse("single_task", kwargs={"task_id": 1})
+        self.categorys_url = reverse("categorys")
+        self.user_list_url = reverse("user_list")
+        self.contacts_url = reverse("contacts")
+        self.contacts_with_id_url = reverse(
+            "contacts_with_id", kwargs={"contact_id": 1}
+        )
 
         self.user_data = {
             "username": "username",
@@ -36,6 +43,14 @@ class TestSetup(APITestCase):
             "subtasks": [],
         }
 
+        self.dummy_contact = {
+            "name": "John Doe",
+            "email": "john@example.com",
+            "phone": "1234567890",
+            "initials": "JD",
+            "color": "#FF0000",
+        }
+
         # Register
         self.client.post(self.register_url, self.user_data)
         # Login
@@ -45,8 +60,9 @@ class TestSetup(APITestCase):
         self.client.credentials(HTTP_AUTHORIZATION=f"Token {self.token}")
         # create Dummy Task
         self.client.post(self.tasks_url, self.dummy_task)
-        tasks = Task.objects.count()
-        print("tasks : ", tasks)
+        # create Dummy Contact
+        self.client.post(self.contacts_url, self.dummy_contact)
+
         return super().setUp()
 
     def tearDown(self):
