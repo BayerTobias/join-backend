@@ -43,4 +43,4 @@ class Task(models.Model):
     assigned_users = models.ManyToManyField(CustomUser, related_name="assigned_tasks")
     category = models.ForeignKey(Category, on_delete=models.DO_NOTHING, default=None)
 
-    subtasks = models.JSONField(default=None)
+    subtasks = models.JSONField(default=list)
