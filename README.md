@@ -1,8 +1,8 @@
-# Project Name
+# Join Backend
 
 ## Introduction
 
-This project is designed to [briefly describe the purpose or scope of the project].
+This project is designed to create and manage users and provide the database for a task management tool, processing and delivering this data through API endpoints.
 
 ## Requirements
 
@@ -20,8 +20,8 @@ Make sure you have the following dependencies installed:
 
 Additionally, rename the `.env_example` file to `.env` and provide the necessary information:
 
-EMAIL_HOST = "Enter Email Host example: smtp.gmail.com"
-EMAIL_HOST_USER = "Enter User example: abc@mail.com"
+EMAIL_HOST = "Enter Email Host example: smtp.gmail.com"  
+EMAIL_HOST_USER = "Enter User example: abc@mail.com"  
 EMAIL_HOST_PASSWORD = "Enter Password example: emailpassword"
 
 ## API Endpoints
